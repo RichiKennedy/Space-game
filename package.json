@@ -1,0 +1,22 @@
+{
+  "name": "space-game",
+  "version": "1.0.0",
+  "description": "An arcade version space game created using Phaser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RichiKennedy/Space-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RichiKennedy/Space-game/issues"
+  },
+  "homepage": "https://github.com/RichiKennedy/Space-game#readme",
+  "dependencies": {
+    "phaser": "^3.55.2"
+  }
+}
