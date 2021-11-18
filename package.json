@@ -4,6 +4,8 @@
   "description": "An arcade version space game created using Phaser",
   "main": "index.js",
   "scripts": {
+    "build": "parcel build src/index.html --out-dir dist",
+    "start": "parcel src/index.html -p 8090",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +19,7 @@
   },
   "homepage": "https://github.com/RichiKennedy/Space-game#readme",
   "dependencies": {
+    "parcel-bundler": "^1.12.5",
     "phaser": "^3.55.2"
   }
 }
