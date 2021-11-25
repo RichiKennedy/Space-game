@@ -19,9 +19,8 @@
   },
   "homepage": "https://github.com/RichiKennedy/Space-game#readme",
   "dependencies": {
-   
     "parcel-bundler": "^1.12.5",
-    "phaser": "^3.55.2"
-    
+    "phaser": "^3.55.2",
+    "prettier": "^2.4.1"
   }
 }
