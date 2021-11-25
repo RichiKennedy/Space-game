@@ -36,7 +36,8 @@ let player1,
   spacefield,
   smallStarfield,
   laserShot,
-  invader;
+  invader,
+  strongInvader;
 
 let alreadyClicked = false;
 
@@ -51,6 +52,7 @@ function preload() {
   // changed invader1 to invader
   this.load.image("invader", invader1);
   //   this.load.image("invader2", invader2,);
+  this.load.image("strongInvader", invader2);
 }
 
 function create() {
@@ -78,8 +80,10 @@ function create() {
   // invader = this.physics.add.sprite(center.x, 20, "invader");
   // invader.body.setVelocityY(50);
 
-  // generating a group of invaders
+  // generating a group of invaders and strongInvader
   const invaders = this.physics.add.group();
+
+  const strongInvaders = this.physics.add.group();
 
   // create a variable to use it as an index for entries array
   let i = 0;
@@ -95,23 +99,45 @@ function create() {
     // increasing index variable to access the next element of array when we run the function again
     i++;
     // console.log("i after", i);
+  }
+    const generateInvadersLoop = this.time.addEvent({
+      delay: 50000,
+      callback: generateInvaders,
+      callbackScope: this,
+      loop: true,
+    });
+  
+  // create a variable to use it as an index for entries array
+  let x=0;
+
+    function generateStrongInvaders() {
+      // console.log("x at first", x);
+      const xCoordinate = Math.random() * 1000;
+      strongInvaders.create(xCoordinate, -20, "strongInvader");
+      // console.log("strongInvader object", strongInvader);
+  
+      // accessing elements of entries' body and giving them velocity
+      strongInvaders.children.entries[x].body.setVelocityY(500);
+      // increasing index variable to access the next element of array when we run the function again
+      x++;
 
     // const invadersArray = invaders.children.entries;
     // invadersArray.forEach((invader) => invader.body.setVelocityY(50));
     // console.log("entries are", invaders.children.entries);
-  }
-
-  const generateInvadersLoop = this.time.addEvent({
-    delay: 5000,
-    callback: generateInvaders,
+  
+    }
+ 
+  const generateStrongInvadersLoop = this.time.addEvent({
+    delay: 1000,
+    callback: generateStrongInvaders,
     callbackScope: this,
     loop: true,
   });
-
+}
   // console.log("entries are", invaders.children.entries);
   // const invadersArray = invaders.children.entries;
   // invadersArray.forEach((invader) => invader.body.setVelocityY(50));
-}
+
 
 // create enemy invaders
 
@@ -128,6 +154,11 @@ function update() {
   } else if (playerControls.right.isDown) {
     player1.body.velocity.x = 200;
   }
+  else if (playerControls.up.isDown) {
+    player1.body.velocity.y = -200;
+  } else if (playerControls.down.isDown) {
+    player1.body.velocity.y = 200;
+  }
 
   // to shoot laser from spachip pressing SPACE
   if (playerControls.space.isDown && alreadyClicked === false) {
@@ -141,6 +172,7 @@ function update() {
     alreadyClicked = false;
   }
 }
+
 
 // TODO create a second group of invaders with different velocity and time delay
 // notes below
