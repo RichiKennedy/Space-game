@@ -4,8 +4,8 @@ import background from "../assets/starfield.png";
 import bigStars from "../assets/stars1.png";
 import smallStars from "../assets/smallStars.png";
 import laser from "../assets/LaserSprites/laser3.png";
-import invader1 from "../assets/drone.png";
-import invader2 from "../assets/robot.png";
+import invader1 from "../assets/73x73.png";
+import invader2 from "../assets/90x90.png";
 
 var config = {
   type: Phaser.AUTO,
@@ -90,18 +90,18 @@ function create() {
 
   function generateInvaders() {
     // console.log("i at first", i);
-    const xCoordinate = Math.random() * 800;
+    const xCoordinate = Math.random() * 1500;
     invaders.create(xCoordinate, -30, "invader");
     // console.log("invaders object", invaders);
 
     // accessing elements of entries' body and giving them velocity
-    invaders.children.entries[i].body.setVelocityY(200);
+    invaders.children.entries[i].body.setVelocityY(300);
     // increasing index variable to access the next element of array when we run the function again
     i++;
     // console.log("i after", i);
   }
     const generateInvadersLoop = this.time.addEvent({
-      delay: 50000,
+      delay: 500,
       callback: generateInvaders,
       callbackScope: this,
       loop: true,
@@ -117,7 +117,7 @@ function create() {
       // console.log("strongInvader object", strongInvader);
   
       // accessing elements of entries' body and giving them velocity
-      strongInvaders.children.entries[x].body.setVelocityY(500);
+      strongInvaders.children.entries[x].body.setVelocityY(380);
       // increasing index variable to access the next element of array when we run the function again
       x++;
 
