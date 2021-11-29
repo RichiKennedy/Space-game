@@ -10,7 +10,6 @@ import heartFilled from "../assets/heartFilled.png";
 import invader1 from "../assets/73x73.png";
 import invader2 from "../assets/90x90.png";
 
-
 var config = {
   type: Phaser.AUTO,
   width: 800,
@@ -37,8 +36,6 @@ let hearts = [];
 let maxHearts = 3;
 let vulnerableTime = 1000;
 
-
-
 // added invader variable declaration
 let player1,
   center,
@@ -46,12 +43,11 @@ let player1,
   starfield,
   spacefield,
   smallStarfield,
-  laserShot,
-  invader,
-  strongInvader;
+  laserShot;
+// invader,
+// strongInvader;
 
 let alreadyClicked = false;
-
 
 function preload() {
   // what assets does the game need
@@ -91,7 +87,6 @@ function create() {
   player1.setOrigin(0.5, 0.3);
   playerControls = this.input.keyboard.createCursorKeys();
 
-
   //create and set an invulnerable flag for after the player has been hit
   player1.invulnerable = false;
   //set no lives / hearts
@@ -100,18 +95,16 @@ function create() {
   //create three heart outlines...
   var heartOutline1 = this.add.sprite(760, 38, "heartEmpty"),
     heartOutline2 = this.add.sprite(720, 38, "heartEmpty"),
-    heartOutline3 = this.add.sprite(680, 38, "heartEmpty");
+    heartOutline3 = this.add.sprite(680, 38, "heartEmpty"),
+    //and store in an array for easy access later
+    heartOutlines = [heartOutline1, heartOutline2, heartOutline3],
+    //create three heart fills...
+    heart1 = this.add.sprite(760, 38, "heartFilled"),
+    heart2 = this.add.sprite(720, 38, "heartFilled"),
+    heart3 = this.add.sprite(680, 38, "heartFilled"),
+    //and store in an array for easy access later
+    hearts = [heart1, heart2, heart3];
 
-  //and store in an array for easy access later
-  heartOutlines = [heartOutline1, heartOutline2, heartOutline3];
-
-  //create three heart fills...
-  heart1 = this.add.sprite(760, 38, "heartFilled");
-  heart2 = this.add.sprite(720, 38, "heartFilled");
-  heart3 = this.add.sprite(680, 38, "heartFilled");
-  //and store in an array for easy access later
-  hearts = [heart1, heart2, heart3];
-}
   // adding invader and making it move
   // invader = this.physics.add.sprite(center.x, 20, "invader");
   // invader.body.setVelocityY(50);
@@ -125,6 +118,8 @@ function create() {
   let i = 0;
 
   function generateInvaders() {
+    console.log("invaders are", invaders);
+
     // console.log("i at first", i);
     const xCoordinate = Math.random() * 1500;
     invaders.create(xCoordinate, -30, "invader");
@@ -136,33 +131,32 @@ function create() {
     i++;
     // console.log("i after", i);
   }
-    const generateInvadersLoop = this.time.addEvent({
-      delay: 500,
-      callback: generateInvaders,
-      callbackScope: this,
-      loop: true,
-    });
-  
-  // create a variable to use it as an index for entries array
-  let x=0;
+  const generateInvadersLoop = this.time.addEvent({
+    delay: 500,
+    callback: generateInvaders,
+    callbackScope: this,
+    loop: true,
+  });
 
-    function generateStrongInvaders() {
-      // console.log("x at first", x);
-      const xCoordinate = Math.random() * 1000;
-      strongInvaders.create(xCoordinate, -20, "strongInvader");
-      // console.log("strongInvader object", strongInvader);
-  
-      // accessing elements of entries' body and giving them velocity
-      strongInvaders.children.entries[x].body.setVelocityY(380);
-      // increasing index variable to access the next element of array when we run the function again
-      x++;
+  // create a variable to use it as an index for entries array
+  let x = 0;
+
+  function generateStrongInvaders() {
+    // console.log("x at first", x);
+    const xCoordinate = Math.random() * 1000;
+    strongInvaders.create(xCoordinate, -20, "strongInvader");
+    // console.log("strongInvader object", strongInvader);
+
+    // accessing elements of entries' body and giving them velocity
+    strongInvaders.children.entries[x].body.setVelocityY(380);
+    // increasing index variable to access the next element of array when we run the function again
+    x++;
 
     // const invadersArray = invaders.children.entries;
     // invadersArray.forEach((invader) => invader.body.setVelocityY(50));
     // console.log("entries are", invaders.children.entries);
-  
-    }
- 
+  }
+
   const generateStrongInvadersLoop = this.time.addEvent({
     delay: 1000,
     callback: generateStrongInvaders,
@@ -170,11 +164,9 @@ function create() {
     loop: true,
   });
 }
-  // console.log("entries are", invaders.children.entries);
-  // const invadersArray = invaders.children.entries;
-  // invadersArray.forEach((invader) => invader.body.setVelocityY(50));
-
-
+// console.log("entries are", invaders.children.entries);
+// const invadersArray = invaders.children.entries;
+// invadersArray.forEach((invader) => invader.body.setVelocityY(50));
 
 // create enemy invaders
 
@@ -190,13 +182,11 @@ function update() {
     player1.body.velocity.x = -200;
   } else if (playerControls.right.isDown) {
     player1.body.velocity.x = 200;
-  }
-  else if (playerControls.up.isDown) {
+  } else if (playerControls.up.isDown) {
     player1.body.velocity.y = -200;
   } else if (playerControls.down.isDown) {
     player1.body.velocity.y = 200;
   }
-
 
   // to shoot laser from spachip pressing SPACE
   if (playerControls.space.isDown && alreadyClicked === false) {
@@ -335,8 +325,6 @@ function playerVulnerable(game) {
   });
 }
 
-
-
 // TODO create a second group of invaders with different velocity and time delay
 
 // notes below
@@ -362,6 +350,4 @@ function playerVulnerable(game) {
 //     player1.setVelocity(0, -200);
 //  }
 
-
 // Maybe delete invaders when they out of bounds
-
