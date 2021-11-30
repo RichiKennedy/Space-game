@@ -184,7 +184,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.physics.add.overlap(
-      this.player1,
+      player1,
       this.invaders,
       function (player1, invader1) {
         this.invaders.killAndHide(invader1);
