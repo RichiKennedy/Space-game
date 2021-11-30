@@ -46,6 +46,7 @@ let player1,
 
 let alreadyClicked = false;
 let healthCounter = 3;
+// laserShot.setDepth(3);
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -81,8 +82,10 @@ export default class GameScene extends Phaser.Scene {
     spacefield = this.add.tileSprite(800, 600, 0, 0, "starfield");
     starfield = this.add.tileSprite(800, 600, 0, 0, "bigStars");
     starfield.setScale(0.4);
+    starfield.setDepth(3);
     smallStarfield = this.add.tileSprite(800, 600, 0, 0, "smallStars");
     smallStarfield.setScale(0.4);
+    smallStarfield.setDepth(3);
 
     //    Player spaceship
     player1 = this.physics.add.sprite(center.x, 550, "player1");
@@ -90,6 +93,7 @@ export default class GameScene extends Phaser.Scene {
     player1.setBodySize(350, 280);
     player1.setCollideWorldBounds(true);
     player1.setOrigin(0.5, 0.3);
+    player1.setDepth(3);
     playerControls = this.input.keyboard.createCursorKeys();
 
     //create and set an invulnerable flag for after the player has been hit
@@ -108,11 +112,13 @@ export default class GameScene extends Phaser.Scene {
     let i = 0;
 
     function generateInvaders() {
-      console.log("invaders are", invaders);
+      // console.log("invaders are", invaders);
 
       // console.log("i at first", i);
       const xCoordinate = Math.random() * 750;
       invaders.create(xCoordinate, -30, "invader");
+      invaders.children.entries[i].setDepth(3);
+    
       // console.log("invaders object", invaders);
 
       // accessing elements of entries' body and giving them velocity
@@ -141,6 +147,7 @@ export default class GameScene extends Phaser.Scene {
 
       strongInvaders.children.entries[x].body.setVelocityY(150);
       let strongInvader = strongInvaders.children.entries[x];
+      strongInvader.setDepth(3);
       let position = strongInvader.body.center;
       // adding enemy laser to invaders
       let enemyShoot = this.physics.add.sprite(
@@ -149,6 +156,7 @@ export default class GameScene extends Phaser.Scene {
       "enemyLaser"
     );
       enemyShoot.setAngle(90).setVelocityY(420).setScale(0.3);
+      enemyShoot.setDepth(3);
 
 
       // increasing index variable to access the next element of array when we run the function again
