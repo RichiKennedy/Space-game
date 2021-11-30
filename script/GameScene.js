@@ -12,6 +12,7 @@ import invader2 from "../assets/90x90.png";
 import healthbar1 from "../assets/health1.png";
 import healthbar2 from "../assets/health2.png";
 import healthbar3 from "../assets/health3.png";
+import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 
 // var config = {
 //   type: Phaser.AUTO,
@@ -67,6 +68,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("invader", invader1);
     //   this.load.image("invader2", invader2,);
     this.load.image("strongInvader", invader2);
+    this.load.image("enemyLaser", enemyBullets);
   }
 
   create() {
@@ -109,7 +111,7 @@ export default class GameScene extends Phaser.Scene {
       console.log("invaders are", invaders);
 
       // console.log("i at first", i);
-      const xCoordinate = Math.random() * 1500;
+      const xCoordinate = Math.random() * 750;
       invaders.create(xCoordinate, -30, "invader");
       // console.log("invaders object", invaders);
 
@@ -120,7 +122,7 @@ export default class GameScene extends Phaser.Scene {
       // console.log("i after", i);
     }
     const generateInvadersLoop = this.time.addEvent({
-      delay: 500,
+      delay: 1500,
       callback: generateInvaders,
       callbackScope: this,
       loop: true,
@@ -131,12 +133,24 @@ export default class GameScene extends Phaser.Scene {
 
     function generateStrongInvaders() {
       // console.log("x at first", x);
-      const xCoordinate = Math.random() * 1000;
+      const xCoordinate = Math.random() * 750;
       strongInvaders.create(xCoordinate, -20, "strongInvader");
       // console.log("strongInvader object", strongInvader);
 
       // accessing elements of entries' body and giving them velocity
-      strongInvaders.children.entries[x].body.setVelocityY(380);
+
+      strongInvaders.children.entries[x].body.setVelocityY(150);
+      let strongInvader = strongInvaders.children.entries[x];
+      let position = strongInvader.body.center;
+      // adding enemy laser to invaders
+      let enemyShoot = this.physics.add.sprite(
+      position.x,
+      position.y,
+      "enemyLaser"
+    );
+      enemyShoot.setAngle(90).setVelocityY(420).setScale(0.3);
+
+
       // increasing index variable to access the next element of array when we run the function again
       x++;
 
@@ -146,7 +160,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     const generateStrongInvadersLoop = this.time.addEvent({
-      delay: 1000,
+      delay: 4000,
       callback: generateStrongInvaders,
       callbackScope: this,
       loop: true,
