@@ -1,5 +1,3 @@
-// import Phaser, { AUTO } from "phaser";
-
 import playerImgSrc from "../assets/spaceShip.png";
 import background from "../assets/starfield.png";
 import bigStars from "../assets/stars1.png";
@@ -14,23 +12,6 @@ import healthbar2 from "../assets/health2.png";
 import healthbar3 from "../assets/health3.png";
 import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 
-// var config = {
-//   type: Phaser.AUTO,
-//   width: 800,
-//   height: 600,
-
-//   physics: {
-//     default: "arcade",
-//     arcade: {
-//       gravity: false,
-//       debug: false,
-//     },
-//   },
-//   scene: [GameScene],
-// };
-
-
-
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -40,7 +21,10 @@ let player1,
   starfield,
   spacefield,
   smallStarfield,
-  laserShot;
+  laserShot,
+  lifeBar1,
+  lifeBar2,
+  lifeBar3;
 // invader,
 // strongInvader;
 
@@ -82,10 +66,14 @@ export default class GameScene extends Phaser.Scene {
     spacefield = this.add.tileSprite(800, 600, 0, 0, "starfield");
     starfield = this.add.tileSprite(800, 600, 0, 0, "bigStars");
     starfield.setScale(0.4);
-    starfield.setDepth(3);
+    starfield.setDepth(1);
     smallStarfield = this.add.tileSprite(800, 600, 0, 0, "smallStars");
     smallStarfield.setScale(0.4);
-    smallStarfield.setDepth(3);
+    smallStarfield.setDepth(1);
+
+    lifeBar1 = this.add.image(700, 50, "healthbar1").setVisible(false);
+    lifeBar2 = this.add.image(700, 50, "healthbar2").setVisible(false);
+    lifeBar3 = this.add.image(700, 50, "healthbar3").setVisible(false);
 
     //    Player spaceship
     player1 = this.physics.add.sprite(center.x, 550, "player1");
@@ -94,6 +82,7 @@ export default class GameScene extends Phaser.Scene {
     player1.setCollideWorldBounds(true);
     player1.setOrigin(0.5, 0.3);
     player1.setDepth(3);
+    console.log(player1);
     playerControls = this.input.keyboard.createCursorKeys();
 
     //create and set an invulnerable flag for after the player has been hit
@@ -104,7 +93,7 @@ export default class GameScene extends Phaser.Scene {
     // invader.body.setVelocityY(50);
 
     // generating a group of invaders and strongInvader
-    const invaders = this.physics.add.group();
+    this.invaders = this.physics.add.group();
 
     const strongInvaders = this.physics.add.group();
 
@@ -116,13 +105,16 @@ export default class GameScene extends Phaser.Scene {
 
       // console.log("i at first", i);
       const xCoordinate = Math.random() * 750;
-      invaders.create(xCoordinate, -30, "invader");
-      invaders.children.entries[i].setDepth(3);
-    
+      this.invaders.create(xCoordinate, -30, "invader");
+      // this.invaders.children.entries[i].setDepth(3);
+      this.invaders.setDepth(3);
+      // console.log(invaders.children.entries[i]);
+
       // console.log("invaders object", invaders);
 
       // accessing elements of entries' body and giving them velocity
-      invaders.children.entries[i].body.setVelocityY(300);
+      // this.invaders.children.entries[i].body.setVelocityY(300);
+      this.invaders.setVelocityY(300);
       // increasing index variable to access the next element of array when we run the function again
       i++;
       // console.log("i after", i);
@@ -151,13 +143,12 @@ export default class GameScene extends Phaser.Scene {
       let position = strongInvader.body.center;
       // adding enemy laser to invaders
       let enemyShoot = this.physics.add.sprite(
-      position.x,
-      position.y,
-      "enemyLaser"
-    );
+        position.x,
+        position.y,
+        "enemyLaser"
+      );
       enemyShoot.setAngle(90).setVelocityY(420).setScale(0.3);
       enemyShoot.setDepth(3);
-
 
       // increasing index variable to access the next element of array when we run the function again
       x++;
@@ -204,11 +195,11 @@ export default class GameScene extends Phaser.Scene {
     if (playerControls.space.isUp) {
       alreadyClicked = false;
     }
-
     this.physics.add.overlap(
       player1,
       this.invaders,
       function (player1, invader1) {
+        console.log("one invader is", invader1);
         this.invaders.killAndHide(invader1);
         this.invaders.remove(invader1);
         this.checkHealth();
@@ -235,19 +226,16 @@ export default class GameScene extends Phaser.Scene {
   checkHealth() {
     switch (healthCounter) {
       case 3:
-        healthbar3.visible = true;
-        healthbar2.visible = false;
-        healthbar1.visible = false;
+        lifeBar3.visible = true;
         break;
       case 2:
-        healthbar3.visible = false;
-        healthbar2.visible = true;
-        healthbar1.visible = false;
+        lifeBar3.visible = false;
+        lifeBar2.visible = true;
         break;
       case 1:
-        healthbar3.visible = false;
-        healthbar2.visible = false;
-        healthbar1.visible = true;
+        lifeBar3.visible = false;
+        lifeBar2.visible = false;
+        lifeBar1.visible = true;
         break;
       // case 0:
       //   this.gameover();
