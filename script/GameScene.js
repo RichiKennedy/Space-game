@@ -33,6 +33,8 @@ import enemyGunSound from "../assets/mp3/laser.mp3";
 let score = 0;
 let scoreBoard;
 
+let isOverlapping = false;
+
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -125,10 +127,10 @@ export default class GameScene extends Phaser.Scene {
     // generating a group of invaders and strongInvader
     this.invaders = this.physics.add.group();
 
-    const strongInvaders = this.physics.add.group();
+    this.strongInvaders = this.physics.add.group();
 
     // create a variable to use it as an index for entries array
-    let i = 0;
+    // let i = 0;
 
     function generateInvaders() {
       // console.log("invaders are", invaders);
@@ -146,7 +148,7 @@ export default class GameScene extends Phaser.Scene {
       // this.invaders.children.entries[i].body.setVelocityY(300);
       this.invaders.setVelocityY(300);
       // increasing index variable to access the next element of array when we run the function again
-      i++;
+      // i++;
       // console.log("i after", i);
     }
     const generateInvadersLoop = this.time.addEvent({
@@ -157,34 +159,47 @@ export default class GameScene extends Phaser.Scene {
     });
 
     // create a variable to use it as an index for entries array
-    let x = 0;
+    // let x = 0;
 
     function generateStrongInvaders() {
       // console.log("x at first", x);
       const xCoordinate = Math.random() * 750;
-      strongInvaders.create(xCoordinate, -20, "strongInvader");
+      this.strongInvaders.create(xCoordinate, -20, "strongInvader");
       // console.log("strongInvader object", strongInvader);
-
+      this.strongInvaders.setDepth(3);
       // accessing elements of entries' body and giving them velocity
 
       // adding enemy laser to invaders
-      strongInvaders.children.entries[x].body.setVelocityY(150);
-      let strongInvader = strongInvaders.children.entries[x];
-      strongInvader.setDepth(3);
-      let position = strongInvader.body.center;
-      let enemyShoot = this.physics.add.sprite(
-        position.x,
-        position.y,
-        "enemyLaser"
-      );
+      // strongInvaders.children.entries[x].body.setVelocityY(150);
+      this.strongInvaders.setVelocityY(300);
 
-      enemyShoot.setAngle(90).setVelocityY(520).setScale(0.4);
+      // let strongInvader = strongInvaders.children.entries[x];
+
+      // strongInvader.setDepth(3);
+      console.log(this.strongInvaders);
+      console.log("bleh");
+
+      let position = this.strongInvaders;
+      // let position = this.strongInvaders.body.center;
+      // strongInvaders.body.setPosition(240, 180);
+      this.enemyShoot = this.physics.add.sprite(xCoordinate, -20, "enemyLaser");
+      // let enemyShoot = this.physics.add.sprite(
+      //   position.x,
+      //   position.y,
+      //   "enemyLaser"
+      // );
+
+      this.enemyShoot.setAngle(90).setVelocityY(520).setScale(0.4);
       enemySound.play();
+
 
       enemyShoot.setDepth(3);
 
+      this.enemyShoot.setDepth(3);
+
+
       // increasing index variable to access the next element of array when we run the function again
-      x++;
+      // x++;
 
       // const invadersArray = invaders.children.entries;
       // invadersArray.forEach((invader) => invader.body.setVelocityY(50));
@@ -213,6 +228,18 @@ export default class GameScene extends Phaser.Scene {
     scoreBoard.setText(`Score: ${score}`);
   }
   update() {
+
+    this.checkHealth();
+    //Declare variables for the score
+
+    //Add the scoreboard in
+    //Scoreboard
+    scoreBoard = this.add.text(10, 10, "Hit Count:0", {
+      fontSize: "32px",
+      fill: "#fff",
+    });
+
+
     //  moving Background scroll
     spacefield.tilePositionY -= 8;
     smallStarfield.tilePositionY -= 7;
@@ -242,10 +269,48 @@ export default class GameScene extends Phaser.Scene {
     if (playerControls.space.isUp) {
       alreadyClicked = false;
     }
+
+    this.physics.add.collider(player1, this.enemyShoot, (player, laser) => {
+      laser.destroy();
+      this.checkHealth();
+      healthCounter--;
+      this.tweens.add({
+        targets: player1,
+        alpha: 0,
+        duration: 100,
+        repeat: 1,
+        yoyo: true,
+        callbackScope: this,
+        onComplete: function () {},
+      });
+    });
+
+    this.physics.add.overlap(
+      player1,
+      this.strongInvaders,
+      function (player, strongInvader) {
+        console.log("one invader is", invader1);
+        this.strongInvaders.killAndHide(strongInvader);
+        this.strongInvaders.remove(strongInvader);
+        this.checkHealth();
+        healthCounter--;
+        this.tweens.add({
+          targets: player,
+          alpha: 0,
+          duration: 100,
+          repeat: 1,
+          yoyo: true,
+          callbackScope: this,
+          onComplete: function () {},
+        });
+      },
+      null,
+      this
+    );
     this.physics.add.overlap(
       player1,
       this.invaders,
-      function (player1, invader1) {
+      function (player, invader1) {
         console.log("one invader is", invader1);
         this.invaders.killAndHide(invader1);
         this.invaders.remove(invader1);
@@ -277,10 +342,10 @@ export default class GameScene extends Phaser.Scene {
         healthCounter--;
         this.updateScore();
         this.tweens.add({
-          targets: player1,
+          targets: player,
           alpha: 0,
           duration: 100,
-          repeat: 3,
+          repeat: 1,
           yoyo: true,
           callbackScope: this,
           onComplete: function () {},
