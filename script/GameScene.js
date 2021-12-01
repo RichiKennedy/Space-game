@@ -12,7 +12,6 @@ import healthbar2 from "../assets/health2.png";
 import healthbar3 from "../assets/health3.png";
 import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 
-
 import playerBullets from "../assets/mp3/laserSound1.mp3";
 import enemyGunSound from "../assets/mp3/laser.mp3";
 
@@ -34,7 +33,6 @@ import enemyGunSound from "../assets/mp3/laser.mp3";
 let score = 0;
 let scoreBoard;
 
-
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -45,10 +43,8 @@ let player1,
   spacefield,
   smallStarfield,
   laserShot,
-
   playerSound,
   enemySound,
-
   lifeBar1,
   lifeBar2,
   lifeBar3;
@@ -66,7 +62,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    console.log("dfgdfgs");
+    // console.log("dfgdfgs");
     // what assets does the game need
     this.load.image("starfield", background);
     this.load.image("player1", playerImgSrc);
@@ -116,7 +112,7 @@ export default class GameScene extends Phaser.Scene {
     player1.setCollideWorldBounds(true);
     player1.setOrigin(0.5, 0.3);
     player1.setDepth(3);
-    console.log(player1);
+    // console.log(player1);
     playerControls = this.input.keyboard.createCursorKeys();
 
     //create and set an invulnerable flag for after the player has been hit
@@ -185,9 +181,7 @@ export default class GameScene extends Phaser.Scene {
       enemyShoot.setAngle(90).setVelocityY(520).setScale(0.4);
       enemySound.play();
 
-     
       enemyShoot.setDepth(3);
-
 
       // increasing index variable to access the next element of array when we run the function again
       x++;
@@ -252,7 +246,7 @@ export default class GameScene extends Phaser.Scene {
       player1,
       this.invaders,
       function (player1, invader1) {
-        console.log("one invader is", invader1);
+        // console.log("one invader is", invader1);
         this.invaders.killAndHide(invader1);
         this.invaders.remove(invader1);
         this.checkHealth();
@@ -290,10 +284,27 @@ export default class GameScene extends Phaser.Scene {
         lifeBar2.visible = false;
         lifeBar1.visible = true;
         break;
-      // case 0:
-      //   this.gameover();
-      //   break;
+      case 0:
+        console.log("dead");
+        this.gameover();
+        break;
     }
+  }
+
+  gameover() {
+    this.finalScore = score;
+    score = 0;
+    healthCounter = 3;
+    console.log("inside gameover");
+    // overlapTriggered = false;
+    this.scene.start("EndGameScene", {
+      score: this.finalScore,
+      center: this.center,
+      fullScreen: this.fullScreen,
+      background: this.background,
+      // frames: this.framesEnd,
+      // key: this.backgroundKey,
+    });
   }
 }
 
