@@ -12,7 +12,6 @@ import healthbar2 from "../assets/health2.png";
 import healthbar3 from "../assets/health3.png";
 import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 
-
 import playerBullets from "../assets/mp3/laserSound1.mp3";
 import enemyGunSound from "../assets/mp3/laser.mp3";
 
@@ -34,7 +33,6 @@ import enemyGunSound from "../assets/mp3/laser.mp3";
 let score = 0;
 let scoreBoard;
 
-
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -45,10 +43,8 @@ let player1,
   spacefield,
   smallStarfield,
   laserShot,
-
   playerSound,
   enemySound,
-
   lifeBar1,
   lifeBar2,
   lifeBar3;
@@ -185,9 +181,7 @@ export default class GameScene extends Phaser.Scene {
       enemyShoot.setAngle(90).setVelocityY(520).setScale(0.4);
       enemySound.play();
 
-     
       enemyShoot.setDepth(3);
-
 
       // increasing index variable to access the next element of array when we run the function again
       x++;
@@ -204,21 +198,21 @@ export default class GameScene extends Phaser.Scene {
       loop: true,
     });
 
-    //ALL SOUNDS
-    playerSound = this.sound.add("playerLaser", { volume: 0.2 });
-    enemySound = this.sound.add("enemySound", { volume: 0.2 });
-  }
-
-  update() {
-    //Declare variables for the score
-
-    //Add the scoreboard in
-    //Scoreboard
-    scoreBoard = this.add.text(10, 10, "Hit Count:0", {
+    // scoreboard
+    scoreBoard = this.add.text(10, 10, `Score: ${score}`, {
       fontSize: "32px",
       fill: "#fff",
     });
 
+    //ALL SOUNDS
+    playerSound = this.sound.add("playerLaser", { volume: 0.2 });
+    enemySound = this.sound.add("enemySound", { volume: 0.2 });
+  }
+  updateScore() {
+    score++;
+    scoreBoard.setText(`Score: ${score}`);
+  }
+  update() {
     //  moving Background scroll
     spacefield.tilePositionY -= 8;
     smallStarfield.tilePositionY -= 7;
@@ -257,6 +251,31 @@ export default class GameScene extends Phaser.Scene {
         this.invaders.remove(invader1);
         this.checkHealth();
         healthCounter--;
+        this.updateScore();
+        this.tweens.add({
+          targets: player1,
+          alpha: 0,
+          duration: 100,
+          repeat: 3,
+          yoyo: true,
+          callbackScope: this,
+          onComplete: function () {},
+        });
+      },
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      player1,
+      this.invaders,
+      function (player1, invader1) {
+        console.log("one invader is", invader1);
+        this.invaders.killAndHide(invader1);
+        this.invaders.remove(invader1);
+        this.checkHealth();
+        healthCounter--;
+        this.updateScore();
         this.tweens.add({
           targets: player1,
           alpha: 0,
