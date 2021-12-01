@@ -32,7 +32,9 @@ import enemyGunSound from "../assets/mp3/laser.mp3";
 // scoreboard variable
 let score = 0;
 let scoreBoard;
+
 let isOverlapping = false;
+
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -190,7 +192,11 @@ export default class GameScene extends Phaser.Scene {
       this.enemyShoot.setAngle(90).setVelocityY(520).setScale(0.4);
       enemySound.play();
 
+
+      enemyShoot.setDepth(3);
+
       this.enemyShoot.setDepth(3);
+
 
       // increasing index variable to access the next element of array when we run the function again
       // x++;
@@ -207,12 +213,22 @@ export default class GameScene extends Phaser.Scene {
       loop: true,
     });
 
+    // scoreboard
+    scoreBoard = this.add.text(10, 10, `Score: ${score}`, {
+      fontSize: "32px",
+      fill: "#fff",
+    });
+
     //ALL SOUNDS
     playerSound = this.sound.add("playerLaser", { volume: 0.2 });
     enemySound = this.sound.add("enemySound", { volume: 0.2 });
   }
-
+  updateScore() {
+    score++;
+    scoreBoard.setText(`Score: ${score}`);
+  }
   update() {
+
     this.checkHealth();
     //Declare variables for the score
 
@@ -222,6 +238,7 @@ export default class GameScene extends Phaser.Scene {
       fontSize: "32px",
       fill: "#fff",
     });
+
 
     //  moving Background scroll
     spacefield.tilePositionY -= 8;
@@ -299,6 +316,31 @@ export default class GameScene extends Phaser.Scene {
         this.invaders.remove(invader1);
         this.checkHealth();
         healthCounter--;
+        this.updateScore();
+        this.tweens.add({
+          targets: player1,
+          alpha: 0,
+          duration: 100,
+          repeat: 3,
+          yoyo: true,
+          callbackScope: this,
+          onComplete: function () {},
+        });
+      },
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      player1,
+      this.invaders,
+      function (player1, invader1) {
+        console.log("one invader is", invader1);
+        this.invaders.killAndHide(invader1);
+        this.invaders.remove(invader1);
+        this.checkHealth();
+        healthCounter--;
+        this.updateScore();
         this.tweens.add({
           targets: player,
           alpha: 0,
