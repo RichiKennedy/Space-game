@@ -12,6 +12,29 @@ import healthbar2 from "../assets/health2.png";
 import healthbar3 from "../assets/health3.png";
 import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 
+
+import playerBullets from "../assets/mp3/laserSound1.mp3";
+import enemyGunSound from "../assets/mp3/laser.mp3";
+
+// var config = {
+//   type: Phaser.AUTO,
+//   width: 800,
+//   height: 600,
+
+//   physics: {
+//     default: "arcade",
+//     arcade: {
+//       gravity: false,
+//       debug: false,
+//     },
+//   },
+//   scene: [GameScene],
+// };
+// scoreboard variable
+let score = 0;
+let scoreBoard;
+
+
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -22,9 +45,14 @@ let player1,
   spacefield,
   smallStarfield,
   laserShot,
+
+  playerSound,
+  enemySound,
+
   lifeBar1,
   lifeBar2,
   lifeBar3;
+
 // invader,
 // strongInvader;
 
@@ -54,9 +82,15 @@ export default class GameScene extends Phaser.Scene {
     //   this.load.image("invader2", invader2,);
     this.load.image("strongInvader", invader2);
     this.load.image("enemyLaser", enemyBullets);
+    this.load.audio("playerLaser", playerBullets);
+    this.load.audio("enemySound", enemyGunSound);
   }
 
   create() {
+    // scoreboard
+    // GameScene.hitScoreText = this.add.text(50, 560, "ENEMIES HIT : 0", {});
+
+    // center variable
     center = {
       x: this.physics.world.bounds.width / 2,
       y: this.physics.world.bounds.height / 2,
@@ -137,18 +171,23 @@ export default class GameScene extends Phaser.Scene {
 
       // accessing elements of entries' body and giving them velocity
 
+      // adding enemy laser to invaders
       strongInvaders.children.entries[x].body.setVelocityY(150);
       let strongInvader = strongInvaders.children.entries[x];
       strongInvader.setDepth(3);
       let position = strongInvader.body.center;
-      // adding enemy laser to invaders
       let enemyShoot = this.physics.add.sprite(
         position.x,
         position.y,
         "enemyLaser"
       );
-      enemyShoot.setAngle(90).setVelocityY(420).setScale(0.3);
+
+      enemyShoot.setAngle(90).setVelocityY(520).setScale(0.4);
+      enemySound.play();
+
+     
       enemyShoot.setDepth(3);
+
 
       // increasing index variable to access the next element of array when we run the function again
       x++;
@@ -164,9 +203,22 @@ export default class GameScene extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+    //ALL SOUNDS
+    playerSound = this.sound.add("playerLaser", { volume: 0.2 });
+    enemySound = this.sound.add("enemySound", { volume: 0.2 });
   }
 
   update() {
+    //Declare variables for the score
+
+    //Add the scoreboard in
+    //Scoreboard
+    scoreBoard = this.add.text(10, 10, "Hit Count:0", {
+      fontSize: "32px",
+      fill: "#fff",
+    });
+
     //  moving Background scroll
     spacefield.tilePositionY -= 8;
     smallStarfield.tilePositionY -= 7;
@@ -186,6 +238,7 @@ export default class GameScene extends Phaser.Scene {
 
     // to shoot laser from spachip pressing SPACE
     if (playerControls.space.isDown && alreadyClicked === false) {
+      playerSound.play();
       alreadyClicked = true;
       laserShot = this.physics.add.sprite(player1.x, player1.y, "laserBeam");
       laserShot.setVelocityY(-300);
