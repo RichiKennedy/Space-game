@@ -34,8 +34,10 @@ import backgroundmusic from "../assets/mp3/background.mp3";
 let score = 0;
 let scoreBoard;
 
+
 let isOverlapping = false;
 let overlapCollider;
+
 
 // let vulnerableTime = 1000;
 
@@ -46,6 +48,9 @@ let player1,
   starfield,
   spacefield,
   smallStarfield,
+
+  laserShot,
+
   playerSound,
   enemySound,
   lifeBar1,
@@ -65,7 +70,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    console.log("dfgdfgs");
+    // console.log("dfgdfgs");
     // what assets does the game need
     this.load.image("starfield", background);
     this.load.image("player1", playerImgSrc);
@@ -113,7 +118,7 @@ export default class GameScene extends Phaser.Scene {
     player1.setCollideWorldBounds(true);
     player1.setOrigin(0.5, 0.3);
     player1.setDepth(3);
-    console.log(player1);
+    // console.log(player1);
     playerControls = this.input.keyboard.createCursorKeys();
 
     //create and set an invulnerable flag for after the player has been hit
@@ -189,7 +194,9 @@ export default class GameScene extends Phaser.Scene {
         .setBodySize(30, 120);
       enemySound.play();
 
+
       this.enemyShoot.setDepth(3);
+
 
       // increasing index variable to access the next element of array when we run the function again
       // x++;
@@ -319,11 +326,14 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.add.overlap(
       player1,
+
       this.strongInvaders,
       function (player, strongInvader) {
         console.log("one invader is", invader1);
         this.strongInvaders.killAndHide(strongInvader);
         this.strongInvaders.remove(strongInvader);
+
+
         this.checkHealth();
         healthCounter--;
         this.tweens.add({
@@ -383,10 +393,27 @@ export default class GameScene extends Phaser.Scene {
         lifeBar2.visible = false;
         lifeBar1.visible = true;
         break;
-      // case 0:
-      //   this.gameover();
-      //   break;
+      case 0:
+        console.log("dead");
+        this.gameover();
+        break;
     }
+  }
+
+  gameover() {
+    this.finalScore = score;
+    score = 0;
+    healthCounter = 3;
+    console.log("inside gameover");
+    // overlapTriggered = false;
+    this.scene.start("EndGameScene", {
+      score: this.finalScore,
+      center: this.center,
+      // fullScreen: this.fullScreen,
+      // background: this.background,
+      // frames: this.framesEnd,
+      // key: this.backgroundKey,
+    });
   }
 }
 

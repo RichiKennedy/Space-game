@@ -1,20 +1,20 @@
 import background from "../assets/starfield.png";
 import bigStars from "../assets/stars1.png";
 import smallStars from "../assets/smallStars.png";
-import startScreenImg from "../assets/start-screen.png";
+import endScreenImg from "../assets/end-screen.png";
 
-let starfield, spacefield, smallStarfield, startImg, center;
+let starfield, spacefield, smallStarfield, endImg, center;
 
-export default class StartGameScene extends Phaser.Scene {
+export default class EndGameScene extends Phaser.Scene {
   constructor() {
-    super({ key: "StartGameScene" });
+    super({ key: "EndGameScene" });
   }
 
   preload() {
     this.load.image("starfield", background);
     this.load.image("bigStars", bigStars);
     this.load.image("smallStars", smallStars);
-    this.load.image("startScreenImg", startScreenImg);
+    this.load.image("endScreenImg", endScreenImg);
   }
 
   create() {
@@ -32,14 +32,15 @@ export default class StartGameScene extends Phaser.Scene {
       y: this.physics.world.bounds.height / 2,
     };
 
-    startImg = this.add.sprite(center.x, center.y, "startScreenImg");
-    startImg.setScale(0.7);
+    endImg = this.add.sprite(center.x, center.y, "endScreenImg");
+    endImg.setScale(0.7);
 
     this.input.on("pointerup", () => {
-      this.scene.stop("StartGameScene");
-      this.scene.start("GameScene");
+      this.scene.stop("GameScene");
+      this.scene.start("StartGameScene");
     });
   }
+
   update() {
     //  moving Background scroll
     spacefield.tilePositionY -= 8;
