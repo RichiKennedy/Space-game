@@ -10,6 +10,10 @@ export default class EndGameScene extends Phaser.Scene {
     super({ key: "EndGameScene" });
   }
 
+  init(data) {
+    this.backgroundmusic = data.backgroundmusic;
+  }
+
   preload() {
     this.load.image("starfield", background);
     this.load.image("bigStars", bigStars);
@@ -37,6 +41,7 @@ export default class EndGameScene extends Phaser.Scene {
 
     this.input.on("pointerup", () => {
       this.scene.stop("GameScene");
+      this.backgroundmusic.stop();
       this.scene.start("StartGameScene");
     });
   }

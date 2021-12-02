@@ -38,6 +38,9 @@ let scoreBoard;
 
 let isOverlapping = false;
 
+let overlapCollider;
+
+
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -241,7 +244,11 @@ export default class GameScene extends Phaser.Scene {
     playerSound = this.sound.add("playerLaser", { volume: 0.2 });
     enemySound = this.sound.add("enemySound", { volume: 0.2 });
     backgroundSound = this.sound.add("backgroundMusic", { volume: 0.2 });
+
     explosionMusic = this.sound.add("explosionMusic", { volume: 0.2 });
+
+    backgroundSound.loop = true;
+
     backgroundSound.play();
   }
 
@@ -445,6 +452,7 @@ export default class GameScene extends Phaser.Scene {
     console.log("inside gameover");
     // overlapTriggered = false;
     this.scene.start("EndGameScene", {
+      backgroundmusic: backgroundSound,
       score: this.finalScore,
       center: this.center,
       // fullScreen: this.fullScreen,
