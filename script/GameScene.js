@@ -300,8 +300,8 @@ export default class GameScene extends Phaser.Scene {
     this.scene.start("EndGameScene", {
       score: this.finalScore,
       center: this.center,
-      fullScreen: this.fullScreen,
-      background: this.background,
+      // fullScreen: this.fullScreen,
+      // background: this.background,
       // frames: this.framesEnd,
       // key: this.backgroundKey,
     });
