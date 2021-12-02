@@ -2,6 +2,7 @@ import Phaser, { AUTO } from "phaser";
 import GameScene from "./GameScene";
 import StartGameScene from "./StartGameScene";
 import EndGameScene from "./EndGameScene";
+import BossLevel from "./BossLevel";
 
 const config = {
   type: Phaser.AUTO,
@@ -14,7 +15,7 @@ const config = {
       gravity: false,
     },
   },
-  scene: [StartGameScene, GameScene, EndGameScene],
+  scene: [StartGameScene, GameScene, BossLevel, EndGameScene],
 };
 
 var game = new Phaser.Game(config);
