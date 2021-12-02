@@ -16,6 +16,7 @@ import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 import playerBullets from "../assets/mp3/laserSound1.mp3";
 import enemyGunSound from "../assets/mp3/laser.mp3";
 import backgroundmusic from "../assets/mp3/background.mp3";
+import backgroundd from "../assets/NebulaRed.png";
 import explosion from "../assets/mp3/explosion.mp3";
 
 // var config = {
@@ -59,6 +60,7 @@ let player1,
   bossLevel,
   lifeBar3,
   explosionMusic,
+  spacefieldd,
   cam;
 
 // xposition = 0;
@@ -79,6 +81,7 @@ export default class GameScene extends Phaser.Scene {
     // console.log("dfgdfgs");
     // what assets does the game need
     this.load.image("starfield", background);
+    this.load.image("starfieldd", backgroundd);
     this.load.image("player1", playerImgSrc);
     this.load.image("bigStars", bigStars);
     this.load.image("smallStars", smallStars);
@@ -161,6 +164,7 @@ export default class GameScene extends Phaser.Scene {
       // console.log("i at first", i);
       const xCoordinate = Math.random() * 750;
       this.invaders.create(xCoordinate, -30, "invader");
+
       // this.invaders.children.entries[i].setDepth(3);
       this.invaders.setDepth(3);
       // console.log(invaders.children.entries[i]);
@@ -190,11 +194,12 @@ export default class GameScene extends Phaser.Scene {
       this.strongInvaders.create(xCoordinate, -20, "strongInvader");
       // console.log("strongInvader object", strongInvader);
       this.strongInvaders.setDepth(3);
+
       // accessing elements of entries' body and giving them velocity
 
       // adding enemy laser to invaders
       // strongInvaders.children.entries[x].body.setVelocityY(150);
-      this.strongInvaders.setVelocityY(300);
+      this.strongInvaders.setVelocityY(250);
 
       let position = this.strongInvaders;
       // let position = this.strongInvaders.body.center;
@@ -208,7 +213,7 @@ export default class GameScene extends Phaser.Scene {
 
       this.enemyShoot
         .setAngle(90)
-        .setVelocityY(520)
+        .setVelocityY(620)
         .setScale(0.4)
         .setBodySize(30, 120);
       enemySound.play();
@@ -224,7 +229,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     const generateStrongInvadersLoop = this.time.addEvent({
-      delay: 4000,
+      delay: 3000,
       callback: generateStrongInvaders,
       callbackScope: this,
       loop: true,
@@ -242,7 +247,7 @@ export default class GameScene extends Phaser.Scene {
 
     //ALL SOUNDS
     playerSound = this.sound.add("playerLaser", { volume: 0.2 });
-    enemySound = this.sound.add("enemySound", { volume: 0.2 });
+    enemySound = this.sound.add("enemySound", { volume: 0.7 });
     backgroundSound = this.sound.add("backgroundMusic", { volume: 0.2 });
 
     explosionMusic = this.sound.add("explosionMusic", { volume: 0.2 });
@@ -412,11 +417,14 @@ export default class GameScene extends Phaser.Scene {
       null,
       this
     );
+    // //  level up
 
-    if (score === 2) {
-      console.log("boss level");
-      this.scene.start("BossLevel");
-    }
+    // //  level up 2
+    // if (score > 20) {
+    //   this.invaders.setVelocityY(550);
+    //   this.strongInvaders.setVelocityY(550);
+    //   this.enemyShoot.setVelocityY(820);
+    // }
 
     // this.checkHealth();
     //   if (this.player1.y > game.config.height) {

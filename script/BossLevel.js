@@ -3,6 +3,8 @@ import bigStars from "../assets/stars1.png";
 import smallStars from "../assets/smallStars.png";
 import playerImgSrc from "../assets/spaceShip.png";
 import Laser1 from "../assets/LaserSprites/playerLaserBoss.png";
+import Laser2 from "../assets/LaserSprites/bossLaser.png";
+import BigPappa1 from "../assets/PH.png";
 import playerBullets1 from "../assets/mp3/laserSound1.mp3";
 //   declare variables
 let center,
@@ -12,6 +14,7 @@ let center,
   smallStarfield,
   playerControls,
   playerSound1,
+  BossJoseph,
   laserS1;
 
 let alreadyClicked = false;
@@ -27,6 +30,8 @@ export default class BossLevel extends Phaser.Scene {
     this.load.image("bigStars", bigStars);
     this.load.image("smallStars", smallStars);
     this.load.image("laserS1", Laser1);
+    this.load.image("JosephLaser", Laser2);
+    this.load.image("BigPappa", BigPappa1);
     this.load.audio("playerSound1", playerBullets1);
   }
 
@@ -53,8 +58,11 @@ export default class BossLevel extends Phaser.Scene {
     player1.setCollideWorldBounds(true);
     player1.setOrigin(0.5, 0.3);
     player1.setDepth(3);
-    // console.log(player1);
     playerControls = this.input.keyboard.createCursorKeys();
+
+    // Boss joseph
+    BossJoseph = this.physics.add.sprite(center.x, 200, "BigPappa");
+    BossJoseph.setCollideWorldBounds(true);
 
     // sounds
     playerSound1 = this.sound.add("playerLaser", { volume: 0.2 });
@@ -64,18 +72,22 @@ export default class BossLevel extends Phaser.Scene {
     //  moving Background scroll
     spacefieldd.tilePositionY -= 8;
     smallStarfield.tilePositionY -= 7;
-    starfield.tilePositionY -= 5;
+    starfield.tilePositionY -= 15;
 
     // to move spaceship left and right
     player1.body.velocity.setTo(0, 0);
     if (playerControls.left.isDown) {
       player1.body.velocity.x = -200;
+      BossJoseph.body.velocity.x = 100;
     } else if (playerControls.right.isDown) {
       player1.body.velocity.x = 200;
+      BossJoseph.body.velocity.x = -100;
     } else if (playerControls.up.isDown) {
       player1.body.velocity.y = -200;
+      BossJoseph.body.velocity.x = -200;
     } else if (playerControls.down.isDown) {
       player1.body.velocity.y = 200;
+      BossJoseph.body.velocity.x = 200;
     }
 
     // to shoot laser from spachip pressing SPACE
