@@ -34,10 +34,8 @@ import backgroundmusic from "../assets/mp3/background.mp3";
 let score = 0;
 let scoreBoard;
 
-
 let isOverlapping = false;
 let overlapCollider;
-
 
 // let vulnerableTime = 1000;
 
@@ -48,9 +46,7 @@ let player1,
   starfield,
   spacefield,
   smallStarfield,
-
   laserShot,
-
   playerSound,
   enemySound,
   lifeBar1,
@@ -194,9 +190,7 @@ export default class GameScene extends Phaser.Scene {
         .setBodySize(30, 120);
       enemySound.play();
 
-
       this.enemyShoot.setDepth(3);
-
 
       // increasing index variable to access the next element of array when we run the function again
       // x++;
@@ -333,7 +327,6 @@ export default class GameScene extends Phaser.Scene {
         this.strongInvaders.killAndHide(strongInvader);
         this.strongInvaders.remove(strongInvader);
 
-
         this.checkHealth();
         healthCounter--;
         this.tweens.add({
@@ -407,6 +400,7 @@ export default class GameScene extends Phaser.Scene {
     console.log("inside gameover");
     // overlapTriggered = false;
     this.scene.start("EndGameScene", {
+      backgroundmusic: backgroundSound,
       score: this.finalScore,
       center: this.center,
       // fullScreen: this.fullScreen,
