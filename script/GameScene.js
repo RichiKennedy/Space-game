@@ -40,7 +40,6 @@ let isOverlapping = false;
 
 let overlapCollider;
 
-
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -413,10 +412,10 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    if (score === 2) {
-      console.log("boss level");
-      this.scene.start("BossLevel");
-    }
+    // if (score === 2) {
+    //   console.log("boss level");
+    //   this.scene.start("BossLevel");
+    // }
 
     // this.checkHealth();
     //   if (this.player1.y > game.config.height) {
