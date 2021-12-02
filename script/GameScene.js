@@ -6,6 +6,7 @@ import laser from "../assets/LaserSprites/laser3.png";
 
 import invader1 from "../assets/73x73.png";
 import invader2 from "../assets/90x90.png";
+import boss from "../assets/PH.png";
 
 import healthbar1 from "../assets/health1.png";
 import healthbar2 from "../assets/health2.png";
@@ -15,6 +16,7 @@ import enemyBullets from "../assets/LaserSprites/enemyLaser.png";
 import playerBullets from "../assets/mp3/laserSound1.mp3";
 import enemyGunSound from "../assets/mp3/laser.mp3";
 import backgroundmusic from "../assets/mp3/background.mp3";
+import explosion from "../assets/mp3/explosion.mp3";
 
 // var config = {
 //   type: Phaser.AUTO,
@@ -35,7 +37,9 @@ let score = 0;
 let scoreBoard;
 
 let isOverlapping = false;
+
 let overlapCollider;
+
 
 // let vulnerableTime = 1000;
 
@@ -52,7 +56,13 @@ let player1,
   lifeBar1,
   lifeBar2,
   backgroundSound,
-  lifeBar3;
+  bossLevel,
+  lifeBar3,
+  explosionMusic,
+  cam;
+
+// xposition = 0;
+// changeVariable = 1;
 
 // invader,
 // strongInvader;
@@ -76,6 +86,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("healthbar1", healthbar1);
     this.load.image("healthbar2", healthbar2);
     this.load.image("healthbar3", healthbar3);
+    this.load.image("bossLevel", boss);
 
     // changed invader1 to invader
     this.load.image("invader", invader1);
@@ -85,6 +96,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.audio("playerLaser", playerBullets);
     this.load.audio("enemySound", enemyGunSound);
     this.load.audio("backgroundMusic", backgroundmusic);
+    this.load.audio("explosionMusic", explosion);
   }
 
   create() {
@@ -103,9 +115,9 @@ export default class GameScene extends Phaser.Scene {
     smallStarfield.setScale(0.4);
     smallStarfield.setDepth(1);
 
-    lifeBar1 = this.add.image(700, 50, "healthbar1").setVisible(false);
-    lifeBar2 = this.add.image(700, 50, "healthbar2").setVisible(false);
-    lifeBar3 = this.add.image(700, 50, "healthbar3").setVisible(false);
+    lifeBar1 = this.add.image(700, 30, "healthbar1").setVisible(false);
+    lifeBar2 = this.add.image(700, 30, "healthbar2").setVisible(false);
+    lifeBar3 = this.add.image(720, 30, "healthbar3").setVisible(false);
 
     //    Player spaceship
     player1 = this.physics.add.sprite(center.x, 550, "player1");
@@ -116,6 +128,14 @@ export default class GameScene extends Phaser.Scene {
     player1.setDepth(3);
     // console.log(player1);
     playerControls = this.input.keyboard.createCursorKeys();
+
+    // bossLevel = this.physics.add.sprite(center.x, -160, "bossLevel");
+
+    // bossLevel.setScale(1);
+    // bossLevel.setDepth(10);
+
+    // if (xposition == 100 || xposition == -100) changeVariable * -1;
+    // xposition += changeVariable;
 
     //create and set an invulnerable flag for after the player has been hit
     // player1.invulnerable = false;
@@ -130,7 +150,10 @@ export default class GameScene extends Phaser.Scene {
     this.strongInvaders = this.physics.add.group();
 
     // create a variable to use it as an index for entries array
+
     // let i = 0;
+
+    // function sendInBoss() {}
 
     function generateInvaders() {
       // console.log("invaders are", invaders);
@@ -206,6 +229,10 @@ export default class GameScene extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+    cam = this.cameras.main.setBounds(0, 0, 600, 650);
+    function shake() {
+      cam.shake(500, 0.03);
+    }
 
     // scoreboard
     scoreBoard = this.add.text(10, 10, `Score: ${score}`, {
@@ -217,16 +244,29 @@ export default class GameScene extends Phaser.Scene {
     playerSound = this.sound.add("playerLaser", { volume: 0.2 });
     enemySound = this.sound.add("enemySound", { volume: 0.2 });
     backgroundSound = this.sound.add("backgroundMusic", { volume: 0.2 });
+
+    explosionMusic = this.sound.add("explosionMusic", { volume: 0.2 });
+
     backgroundSound.loop = true;
+
     backgroundSound.play();
   }
+
   updateScore() {
     score++;
+    scoreBoard.setText(`Score: ${score}`);
+  }
+  updateJScore() {
+    score += 5;
     scoreBoard.setText(`Score: ${score}`);
   }
 
   update() {
     this.checkHealth();
+
+    function shake() {
+      cam.shake(500, 0.03);
+    }
 
     //  moving Background scroll
     spacefield.tilePositionY -= 8;
@@ -262,8 +302,13 @@ export default class GameScene extends Phaser.Scene {
       alreadyClicked = false;
     }
 
+    function shake() {
+      cam.shake(500, 0.03);
+    }
+
     this.physics.add.collider(player1, this.enemyShoot, (player, laser) => {
       laser.destroy();
+      shake();
       this.checkHealth();
       healthCounter--;
       this.tweens.add({
@@ -284,6 +329,7 @@ export default class GameScene extends Phaser.Scene {
       (invader, laser) => {
         invader.destroy();
         laser.destroy();
+        explosionMusic.play();
         this.updateScore();
 
         this.tweens.add({
@@ -305,7 +351,7 @@ export default class GameScene extends Phaser.Scene {
       (joseph, laser) => {
         joseph.destroy();
         laser.destroy();
-        this.updateScore();
+        this.updateJScore();
 
         this.tweens.add({
           targets: joseph,
@@ -366,6 +412,11 @@ export default class GameScene extends Phaser.Scene {
       null,
       this
     );
+
+    if (score === 2) {
+      console.log("boss level");
+      this.scene.start("BossLevel");
+    }
 
     // this.checkHealth();
     //   if (this.player1.y > game.config.height) {
