@@ -217,6 +217,7 @@ export default class GameScene extends Phaser.Scene {
     playerSound = this.sound.add("playerLaser", { volume: 0.2 });
     enemySound = this.sound.add("enemySound", { volume: 0.2 });
     backgroundSound = this.sound.add("backgroundMusic", { volume: 0.2 });
+    backgroundSound.loop = true;
     backgroundSound.play();
   }
   updateScore() {
