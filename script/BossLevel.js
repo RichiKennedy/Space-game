@@ -20,6 +20,8 @@ let center,
   lifeBar2,
   lifeBar3;
 
+let bossLife = 10;
+
 let alreadyClicked = false;
 
 export default class BossLevel extends Phaser.Scene {
@@ -131,10 +133,12 @@ export default class BossLevel extends Phaser.Scene {
       alreadyClicked = false;
     }
 
+    // shot laser to the boss
     this.physics.add.collider(BossJoseph, this.laserS1, (joseph, laser) => {
-      joseph.destroy();
+      bossLife--;
+      this.checkBossHealth();
+      // joseph.destroy();
       laser.destroy();
-      this.updateScoreForKillingBoss();
 
       this.tweens.add({
         targets: joseph,
@@ -146,6 +150,14 @@ export default class BossLevel extends Phaser.Scene {
         onComplete: function () {},
       });
     });
+  }
+
+  checkBossHealth() {
+    if (bossLife <= 0) {
+      BossJoseph.destroy();
+      this.updateScoreForKillingBoss();
+      this.gameover();
+    }
   }
 
   checkHealth() {
@@ -167,5 +179,12 @@ export default class BossLevel extends Phaser.Scene {
         this.gameover();
         break;
     }
+  }
+
+  gameover() {
+    console.log("inside gameover");
+    this.scene.start("EndGameScene", {
+      backgroundmusic: this.backgroundmusic,
+    });
   }
 }
