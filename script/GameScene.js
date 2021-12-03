@@ -417,7 +417,7 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    if (score >= 3) {
+    if (score >= 30) {
       console.log("boss level");
       this.bossLevelStart();
     }

@@ -18,7 +18,8 @@ let center,
   laserS1,
   lifeBar1,
   lifeBar2,
-  lifeBar3;
+  lifeBar3,
+  cam;
 
 let bossLife = 10;
 
@@ -88,6 +89,32 @@ export default class BossLevel extends Phaser.Scene {
     lifeBar1 = this.add.image(700, 30, "healthbar1").setVisible(false);
     lifeBar2 = this.add.image(700, 30, "healthbar2").setVisible(false);
     lifeBar3 = this.add.image(720, 30, "healthbar3").setVisible(false);
+
+    this.time.addEvent({
+      delay: 2000,
+      callback: () => {
+        this.enemyShoot = this.physics.add.sprite(
+          BossJoseph.x,
+          BossJoseph.y + 70,
+          "enemyLaser"
+        );
+        this.enemyShoot
+          .setAngle(90)
+          .setVelocityY(620)
+          .setScale(0.4)
+          .setBodySize(30, 120);
+
+        this.enemyShoot.setDepth(3);
+      },
+      loop: true,
+      repeat: -1,
+    });
+
+    cam = this.cameras.main.setBounds(0, 0, 600, 650);
+  }
+
+  shake() {
+    cam.shake(500, 0.03);
   }
 
   updateScoreForKillingBoss() {
@@ -104,19 +131,21 @@ export default class BossLevel extends Phaser.Scene {
     starfield.tilePositionY -= 15;
 
     // to move spaceship left and right
-    player1.body.velocity.setTo(0, 0);
-    if (playerControls.left.isDown) {
-      player1.body.velocity.x = -200;
-      BossJoseph.body.velocity.x = 100;
-    } else if (playerControls.right.isDown) {
-      player1.body.velocity.x = 200;
-      BossJoseph.body.velocity.x = -100;
-    } else if (playerControls.up.isDown) {
-      player1.body.velocity.y = -200;
-      BossJoseph.body.velocity.x = -200;
-    } else if (playerControls.down.isDown) {
-      player1.body.velocity.y = 200;
-      BossJoseph.body.velocity.x = 200;
+    if (bossLife > 0) {
+      player1.body.velocity.setTo(0, 0);
+      if (playerControls.left.isDown) {
+        player1.body.velocity.x = -200;
+        BossJoseph.body.velocity.x = 100;
+      } else if (playerControls.right.isDown) {
+        player1.body.velocity.x = 200;
+        BossJoseph.body.velocity.x = -100;
+      } else if (playerControls.up.isDown) {
+        player1.body.velocity.y = -200;
+        BossJoseph.body.velocity.x = -200;
+      } else if (playerControls.down.isDown) {
+        player1.body.velocity.y = 200;
+        BossJoseph.body.velocity.x = 200;
+      }
     }
 
     // to shoot laser from spachip pressing SPACE
@@ -142,6 +171,24 @@ export default class BossLevel extends Phaser.Scene {
 
       this.tweens.add({
         targets: joseph,
+        alpha: 0.5,
+        duration: 100,
+        repeat: 1,
+        yoyo: true,
+        callbackScope: this,
+        onComplete: function () {
+          BossJoseph.alpha = 1;
+        },
+      });
+    });
+
+    this.physics.add.collider(player1, this.enemyShoot, (player, laser) => {
+      laser.destroy();
+      this.shake();
+      this.checkHealth();
+      this.healthCounter--;
+      this.tweens.add({
+        targets: player1,
         alpha: 0,
         duration: 100,
         repeat: 1,
@@ -176,15 +223,22 @@ export default class BossLevel extends Phaser.Scene {
         break;
       case 0:
         console.log("dead");
-        this.gameover();
+        this.scene.start("EndGameScene", {
+          backgroundmusic: this.backgroundmusic,
+        });
         break;
     }
   }
 
   gameover() {
     console.log("inside gameover");
-    this.scene.start("EndGameScene", {
-      backgroundmusic: this.backgroundmusic,
+    this.time.addEvent({
+      delay: 4000,
+      callback: () => {
+        this.scene.start("EndGameScene", {
+          backgroundmusic: this.backgroundmusic,
+        });
+      },
     });
   }
 }
