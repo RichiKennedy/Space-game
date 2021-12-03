@@ -417,7 +417,7 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    if (score >= 30) {
+    if (score >= 25) {
       console.log("boss level");
       this.bossLevelStart();
     }
@@ -439,13 +439,18 @@ export default class GameScene extends Phaser.Scene {
 
   bossLevelStart() {
     this.finalScore = score;
+    this.finalLives = healthCounter;
+    score = 0;
+    healthCounter = 3;
+
     // console.log("final score in game scene", this.finalScore)
     this.scoreBoard = scoreBoard;
-    this.healthCounter = healthCounter;
+    // this.healthCounter = healthCounter;
     this.scene.start("BossLevel", {
       score: this.finalScore,
       scoreBoard: this.scoreBoard,
-      healthCounter: this.healthCounter,
+      healthCounter: this.finalLives,
+      backgroundmusic: backgroundSound,
     });
   }
 
@@ -473,7 +478,8 @@ export default class GameScene extends Phaser.Scene {
   gameover() {
     // this.finalScore = score;
     // this.scoreBoard = scoreBoard;
-    // score = 0;
+    score = 0;
+    healthCounter = 3;
     // healthCounter = 3;
     console.log("inside gameover");
     // overlapTriggered = false;
@@ -482,6 +488,7 @@ export default class GameScene extends Phaser.Scene {
       // score: this.finalScore,
       // scoreBoard: this.scoreBoard,
       center: this.center,
+
       // fullScreen: this.fullScreen,
       // background: this.background,
       // frames: this.framesEnd,

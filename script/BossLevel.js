@@ -21,7 +21,7 @@ let center,
   lifeBar3,
   cam;
 
-let bossLife = 10;
+let bossLife = 20;
 
 let alreadyClicked = false;
 
@@ -77,6 +77,7 @@ export default class BossLevel extends Phaser.Scene {
     BossJoseph = this.physics.add.sprite(center.x, 200, "BigPappa");
     BossJoseph.setCollideWorldBounds(true);
     BossJoseph.setDepth(3);
+    BossJoseph.alpha = 1;
 
     // sounds
     playerSound1 = this.sound.add("playerLaser", { volume: 0.2 });
@@ -118,7 +119,7 @@ export default class BossLevel extends Phaser.Scene {
   }
 
   updateScoreForKillingBoss() {
-    this.score += 50;
+    this.score += 10;
     this.scoreBoard.setText(`Score: ${this.score}`);
   }
 
@@ -200,8 +201,8 @@ export default class BossLevel extends Phaser.Scene {
   }
 
   checkBossHealth() {
-    if (bossLife <= 0) {
-      BossJoseph.destroy();
+    if (bossLife === 0) {
+      BossJoseph.alpha = 0;
       this.updateScoreForKillingBoss();
       this.gameover();
     }
@@ -223,15 +224,22 @@ export default class BossLevel extends Phaser.Scene {
         break;
       case 0:
         console.log("dead");
+        this.score = 0;
+        this.healthCounter = 3;
         this.scene.start("EndGameScene", {
           backgroundmusic: this.backgroundmusic,
         });
+        bossLife = 20;
         break;
     }
   }
 
   gameover() {
+    // this.score = 0;
+    // this.healthCounter = 3;
     console.log("inside gameover");
+    bossLife = 20;
+
     this.time.addEvent({
       delay: 4000,
       callback: () => {
