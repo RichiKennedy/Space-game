@@ -77,10 +77,10 @@ export default class GameScene extends Phaser.Scene {
   preload() {
     // console.log("dfgdfgs");
     // what assets does the game need
-    this.load.image("starfield", background);
+    // this.load.image("starfield", background);
     this.load.image("player1", playerImgSrc);
-    this.load.image("bigStars", bigStars);
-    this.load.image("smallStars", smallStars);
+    // this.load.image("bigStars", bigStars);
+    // this.load.image("smallStars", smallStars);
     this.load.image("laserBeam", laser);
     this.load.image("healthbar1", healthbar1);
     this.load.image("healthbar2", healthbar2);

@@ -15,9 +15,9 @@ export default class EndGameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("starfield", background);
-    this.load.image("bigStars", bigStars);
-    this.load.image("smallStars", smallStars);
+    // this.load.image("starfield", background);
+    // this.load.image("bigStars", bigStars);
+    // this.load.image("smallStars", smallStars);
     this.load.image("endScreenImg", endScreenImg);
   }
 
