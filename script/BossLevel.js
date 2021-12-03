@@ -15,13 +15,23 @@ let center,
   playerControls,
   playerSound1,
   BossJoseph,
-  laserS1;
+  laserS1,
+  lifeBar1,
+  lifeBar2,
+  lifeBar3;
 
 let alreadyClicked = false;
 
 export default class BossLevel extends Phaser.Scene {
   constructor() {
     super({ key: "BossLevel" });
+  }
+
+  init(data) {
+    this.backgroundmusic = data.backgroundmusic;
+    this.score = data.score;
+    this.scoreBoard = data.scoreBoard;
+    this.healthCounter = data.healthCounter;
   }
 
   preload() {
@@ -63,12 +73,29 @@ export default class BossLevel extends Phaser.Scene {
     // Boss joseph
     BossJoseph = this.physics.add.sprite(center.x, 200, "BigPappa");
     BossJoseph.setCollideWorldBounds(true);
+    BossJoseph.setDepth(3);
 
     // sounds
     playerSound1 = this.sound.add("playerLaser", { volume: 0.2 });
+
+    this.scoreBoard = this.add.text(10, 10, `Score: ${this.score}`, {
+      fontSize: "32px",
+      fill: "#fff",
+    });
+
+    lifeBar1 = this.add.image(700, 30, "healthbar1").setVisible(false);
+    lifeBar2 = this.add.image(700, 30, "healthbar2").setVisible(false);
+    lifeBar3 = this.add.image(720, 30, "healthbar3").setVisible(false);
+  }
+
+  updateScoreForKillingBoss() {
+    this.score += 50;
+    this.scoreBoard.setText(`Score: ${this.score}`);
   }
 
   update() {
+    this.checkHealth();
+
     //  moving Background scroll
     spacefieldd.tilePositionY -= 8;
     smallStarfield.tilePositionY -= 7;
@@ -98,9 +125,47 @@ export default class BossLevel extends Phaser.Scene {
       this.laserS1.setVelocityY(-300);
       this.laserS1.setAngle(-90);
       this.laserS1.setBodySize(30, 30);
+      this.laserS1.setDepth(3);
     }
     if (playerControls.space.isUp) {
       alreadyClicked = false;
+    }
+
+    this.physics.add.collider(BossJoseph, this.laserS1, (joseph, laser) => {
+      joseph.destroy();
+      laser.destroy();
+      this.updateScoreForKillingBoss();
+
+      this.tweens.add({
+        targets: joseph,
+        alpha: 0,
+        duration: 100,
+        repeat: 1,
+        yoyo: true,
+        callbackScope: this,
+        onComplete: function () {},
+      });
+    });
+  }
+
+  checkHealth() {
+    switch (this.healthCounter) {
+      case 3:
+        lifeBar3.visible = true;
+        break;
+      case 2:
+        lifeBar3.visible = false;
+        lifeBar2.visible = true;
+        break;
+      case 1:
+        lifeBar3.visible = false;
+        lifeBar2.visible = false;
+        lifeBar1.visible = true;
+        break;
+      case 0:
+        console.log("dead");
+        this.gameover();
+        break;
     }
   }
 }

@@ -41,7 +41,6 @@ let isOverlapping = false;
 
 let overlapCollider;
 
-
 // let vulnerableTime = 1000;
 
 // added invader variable declaration
@@ -417,6 +416,12 @@ export default class GameScene extends Phaser.Scene {
       null,
       this
     );
+
+    if (score >= 3) {
+      console.log("boss level");
+      this.bossLevelStart();
+    }
+
     // //  level up
 
     // //  level up 2
@@ -430,6 +435,18 @@ export default class GameScene extends Phaser.Scene {
     //   if (this.player1.y > game.config.height) {
     //     this.gameover();
     //   }
+  }
+
+  bossLevelStart() {
+    this.finalScore = score;
+    // console.log("final score in game scene", this.finalScore)
+    this.scoreBoard = scoreBoard;
+    this.healthCounter = healthCounter;
+    this.scene.start("BossLevel", {
+      score: this.finalScore,
+      scoreBoard: this.scoreBoard,
+      healthCounter: this.healthCounter,
+    });
   }
 
   checkHealth() {
@@ -454,14 +471,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   gameover() {
-    this.finalScore = score;
-    score = 0;
-    healthCounter = 3;
+    // this.finalScore = score;
+    // this.scoreBoard = scoreBoard;
+    // score = 0;
+    // healthCounter = 3;
     console.log("inside gameover");
     // overlapTriggered = false;
     this.scene.start("EndGameScene", {
       backgroundmusic: backgroundSound,
-      score: this.finalScore,
+      // score: this.finalScore,
+      // scoreBoard: this.scoreBoard,
       center: this.center,
       // fullScreen: this.fullScreen,
       // background: this.background,
