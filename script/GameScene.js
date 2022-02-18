@@ -301,7 +301,7 @@ export default class GameScene extends Phaser.Scene {
       this.laserShot.setVelocityY(-300);
       this.laserShot.setAngle(-90);
       this.laserShot.setBodySize(30, 30);
-      console.log("shoot");
+
     }
     if (playerControls.space.isUp) {
       alreadyClicked = false;
