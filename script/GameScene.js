@@ -1,6 +1,6 @@
 import playerImgSrc from "../assets/spaceShip.png";
 import background from "../assets/starfield.png";
-import bigStars from "../assets/Starsg1.png";
+import bigStars from "../assets/Stars1.png";
 import smallStars from "../assets/smallStars.png";
 import laser from "../assets/LaserSprites/laser3.png";
 
@@ -301,7 +301,6 @@ export default class GameScene extends Phaser.Scene {
       this.laserShot.setVelocityY(-300);
       this.laserShot.setAngle(-90);
       this.laserShot.setBodySize(30, 30);
-
     }
     if (playerControls.space.isUp) {
       alreadyClicked = false;
