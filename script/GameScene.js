@@ -1,6 +1,6 @@
 import playerImgSrc from "../assets/spaceShip.png";
 import background from "../assets/starfield.png";
-import bigStars from "../assets/stars1.png";
+import bigStars from "../assets/Stars1.png";
 import smallStars from "../assets/smallStars.png";
 import laser from "../assets/LaserSprites/laser3.png";
 
